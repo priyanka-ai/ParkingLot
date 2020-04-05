@@ -2,11 +2,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+
 public class PadrkingLotTest {
 
     private ParkingLot parkinglot;
     private Object vehical;
     private Object vehical2;
+    private Object slotnumber;
+    private Integer allocatedSlot;
 
     @Before
     public void setUp() throws Exception {
@@ -111,5 +115,21 @@ public class PadrkingLotTest {
         parkinglot.isVehicalParked(vehical);
         parkinglot.isPresent(vehical);
         Assert.assertFalse(false);
+    }
+
+    @Test
+    public void givenVehical_WhenParked_shouldReturnTime() {
+    LocalDateTime parkedTime=parkinglot.park(vehical);
+
+
+    }
+
+    @Test
+    public void givenVehical_shouldReturnSlot() {
+        try {
+            allocatedSlot= parkinglot.alotslot(driverType.HANDICAP);
+        }catch (Exception e) {
+            Assert.assertEquals(1, slotnumber);
+        }
     }
 }

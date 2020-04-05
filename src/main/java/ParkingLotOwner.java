@@ -7,5 +7,12 @@ public class ParkingLotOwner implements ParkingLotObserver {
     public boolean isCapacityFull() {
         return isFullCapacity;
     }
+
+    @Override
+    public void notifyObserver() {
+
+    }
+
+
 }
 

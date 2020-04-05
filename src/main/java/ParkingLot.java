@@ -1,8 +1,5 @@
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
@@ -11,22 +8,30 @@ public class ParkingLot {
     private int actualCapacityOfLot;
     private List vehicallist;
     private int totalCapacity;
-    private List parkingLot;
+    private List parkingLots;
     private List observers;
     private ParkingLotOwner parkingLotOwner;
     private AirportSecurity airportSecurity;
-    private List slotList;
+    private List slotList=null;
     private String parkingType;
     private driverType type;
     private Object vehicle;
     private int avialableSlot;
+    private List reverserList;
+    private LocalDateTime parkedTime;
 
-
+    /* public ParkingLot( int totalCapacity, ParkingLot parkingLots) {
+         this.numberOfParkedVehical = numberOfParkedVehical;
+         this.totalCapacity = totalCapacity;
+         this.parkingLots = parkingLots;
+     }
+ */
     public ParkingLot(int totalCapacity) {
         this.totalCapacity =totalCapacity;
         this.vehicallist=new ArrayList();
-        this.slotList=new ArrayList();
+        this.slotList=new ArrayList(null);
         this.observers=new ArrayList();
+        this.reverserList=new ArrayList();
         this.parkingLotOwner=parkingLotOwner;
 
 
@@ -34,20 +39,30 @@ public class ParkingLot {
 
 
     public void registerObserver(ParkingLotObserver observer) {
+
         observers.add(observer);
+
     }
 
-    public void park(Object vehical)throws RuntimeException {
+    public LocalDateTime park(Object vehical)throws RuntimeException {
         if(isVehicalParked(vehical))
             throw new ParkingLotException("vehical is already parked");
         this.vehicallist.add(vehical);
+        parkedTime=LocalDateTime.now();
         numberOfParkedVehical++;
+        return parkedTime;
+    }
+
+    public boolean isParkingLotFull(){
         if(numberOfParkedVehical == totalCapacity){
             parkingLotOwner.capacityIsFull();
             airportSecurity.capacityIsFull();
+            notifyObserver();
             throw new ParkingLotException("parkinglot is full");
 
         }
+        else
+        return false;
     }
 
     public int parkedVehicalinLot(){
@@ -80,38 +95,45 @@ public class ParkingLot {
     }
 
 
-   /* public LocalDateTime getTime(){
+   /* public List addParkingLot(ParkingLot parkingLot){
+        parkingLots.add(parkingLot);
+    }
+*/
+
+   public LocalDateTime getTime() {
         return LocalDateTime.now();
     }
 
-private int alotslot(driverType type){
-        if(numberOfParkedVehical< totalCapacity){
-            if(type==driverType.NORMAL){
-                for (int i=0; i<totalCapacity; i++) {
-                    if(vehicallist.indexOf(i) == 0)
-                        return i;
-                    
-                }
-                return slotList.indexOf(slotList);
-            }
-            if(type==driverType.NORMAL){
-                return slotList.indexOf(slotList);
-            }
+    private void notifyObserver() {
+        if (isParkingLotFull()) {
+            observers.stream().forEach(e -> System.out.println("Parking lot is full"));
         }
-
-
-    return 0;
-}
-
-    public boolean getSlot(Object vehicle, int avialableSlot) {
-        if (numberOfParkedVehical <= totalCapacity) {
-            this.vehicle = vehicle;
-            this.avialableSlot = avialableSlot;
-            avialableSlot++;
-            park(vehicle);
-            return true;
+        if (!isParkingLotFull()) {
+            observers.stream().forEach(e -> System.out.println("parking lot has a space to park vehical"));
         }
-        return false;
     }
-*/
+
+
+/*public Integer alotslot(driverType type){
+        if(numberOfParkedVehical< totalCapacity){
+            reverserList=Collections.reverse(slotList);
+            if(type==driverType.NORMAL){
+                for (int i=totalCapacity; i>0; i--) {
+                   if(!isPresent(vehicle))
+                      slotList.get(i);
+                   return i;
+                }
+            }
+            if(type==driverType.HANDICAP){
+                for(int i=0; i<totalCapacity; i++){
+                   if(!isPresent(vehicle))
+                   slotList.get(i);
+                    return i;
+                }
+            }
+        }
+    return 0;
+}*/
+
+
 }
