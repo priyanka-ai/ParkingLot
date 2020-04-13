@@ -8,7 +8,6 @@ public class ParkingLot {
     private int actualCapacityOfLot;
     private List vehicallist;
     private int totalCapacity;
-    private List parkingLots;
     private List observers;
     private ParkingLotOwner parkingLotOwner;
     private AirportSecurity airportSecurity;
@@ -19,6 +18,8 @@ public class ParkingLot {
     private int avialableSlot;
     private List reverserList;
     private LocalDateTime parkedTime;
+    private String size;
+    private String large;
 
     /* public ParkingLot( int totalCapacity, ParkingLot parkingLots) {
          this.numberOfParkedVehical = numberOfParkedVehical;
@@ -54,10 +55,10 @@ public class ParkingLot {
 
     }
 
-    public LocalDateTime park(Object vehical,driverType type)throws RuntimeException {
+    public LocalDateTime park(Object vehical,driverType type,vehicalType vtype)throws RuntimeException {
         if(isVehicalParked(vehical))
             throw new ParkingLotException("vehical is already parked");
-       int slotNumber=alotslot(type);
+       int slotNumber=alotslot(type,vtype);
         this.vehicallist.add(slotNumber,vehicle);
         parkedTime=LocalDateTime.now();
         numberOfParkedVehical++;
@@ -84,7 +85,7 @@ public class ParkingLot {
         return totalCapacity-numberOfParkedVehical;
     }
 
-    public boolean isVehicalParked(Object vehical) {
+    public boolean isVehicalParked(Object vehical) throws RuntimeException {
         if(vehicallist.contains(vehical))
             return true;
         return false;
@@ -94,6 +95,7 @@ public class ParkingLot {
         if(vehicallist.contains(vehical)) {
             vehicallist.remove(vehical);
             numberOfParkedVehical--;
+            notifyObserver();
             return true;
         }
         return false;
@@ -124,8 +126,12 @@ public class ParkingLot {
         }
     }
 
+    public String getVehicalSize(String vehicleSize){
+        return size;
+    }
 
-public Integer alotslot(driverType type){
+
+public Integer alotslot(driverType type,vehicalType vtype){
        fillNull();
         if(numberOfParkedVehical< totalCapacity){
            // Collections.reverse(slotList);
@@ -143,7 +149,15 @@ public Integer alotslot(driverType type){
                     return i;
                 }
             }
-        }
+            if(vtype==vehicalType.LARGE){
+                for(int i=1; i<=totalCapacity-2; i++){
+                    if(slotList.get(1)==null && slotList.get(i+1)==null && slotList.get(i+2)==null)
+                        return i+1;
+                    }
+
+                }
+            }
+
     return 0;
 }
 
